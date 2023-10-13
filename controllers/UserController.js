@@ -91,3 +91,19 @@ export const addtolist = async (req, res) => {
         return res.status(500).json({ message: err.message || '500 Server error.' });
     }
 }
+
+export const removefromlist = async (req, res) => {
+    try {
+        main();
+        const { anime, list } = req.body;
+        if (!anime || !list) return res.status(400).json({ message: `` });
+        const user = await User.findById(req.userId);
+        const index = user.lists[list].indexOf(anime);
+        user.lists[list].splice(index, 1);
+        await user.save();
+        return res.status(202).json({ message: `${anime.title || `Anime`} was successfully removed from ${list} list.` });
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).json({ message: err.message || '500 Server error.' });
+    }
+}
