@@ -77,15 +77,22 @@ export const getme = async (req, res) => {
 export const addtolist = async (req, res) => {
     try {
         main();
-        const { rated, list, anime } = req.body;
+        const { list, anime } = req.body;
+        if (!anime || !list) return res.status(400).json({ message: `No anime or list provided.` });
         const user = await User.findById(req.userId);
-        user.lists[list].push({
-            rated,
+        if(user.list?.some(e => e.anime?.mal_id === anime?.mal_id)){
+            const index = user.list.findIndex(e => e.anime.mal_id === anime.mal_id);
+            user.list[index].list = list;
+            await user.save();
+            return res.status(202).json({ message: `${anime.title || `Anime`} was successfully moved to ${list} list.` })
+        }
+        user.list.push({
             anime,
-            date: new Date()
+            date: new Date(),
+            list
         });
         await user.save();
-        return res.status(202).json({ message: `${anime.title || `Anime`} was successfully added to ${list} list.` })
+        return res.status(202).json({ message: `${anime.title || `Anime`} was successfully added to ${list} list.` });
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: err.message || '500 Server error.' });
@@ -98,8 +105,8 @@ export const removefromlist = async (req, res) => {
         const { anime, list } = req.body;
         if (!anime || !list) return res.status(400).json({ message: `No anime or list provided.` });
         const user = await User.findById(req.userId);
-        const index = user.lists[list].indexOf(anime);
-        user.lists[list].splice(index, 1);
+        const index = user.list.findIndex(e => e.anime.mal_id === anime.mal_id);
+        user.list.splice(index, 1);
         await user.save();
         return res.status(202).json({ message: `${anime.title || `Anime`} was successfully removed from ${list} list.` });
     } catch (err) {
@@ -111,14 +118,14 @@ export const removefromlist = async (req, res) => {
 export const changerating = async (req, res) => {
     try {
         main();
-        const {anime, list, rating} = req.body;
-        if (!anime || !list) return res.status(400).json({ message: `No anime or list provided.` });
+        const {animeId, rating} = req.body;
+        if (!rating) return res.status(400).json({ message: `Rating cannot be null or empty.` });
         const user = await User.findById(req.userId);
-        const index = user.lists[list].indexOf(anime);
+        const index = user.list.findIndex(e => e.anime?.mal_id == animeId);
         console.log('Index: ' + index);
-        user.lists[list][index].rated = rating;
+        user.list[index].rating = rating;
         await user.save();
-        return res.status(202).json({ message: `Rating on ${anime.title || 'anime'} was successfully changed.` });
+        return res.status(202).json({ message: `Rating of anime in your list was successfully changed.` });
     } catch (err) {
         console.log(err.message);
         return res.status(500).json({ message: err.message || '500 Server error.' });
@@ -128,13 +135,14 @@ export const changerating = async (req, res) => {
 export const changeepisodes = async (req, res) => {
     try {
         main();
-        const {anime, list, episodes} = req.body;
-        if (!anime || !list) return res.status(400).json({ message: `No anime or list provided.` });
+        const {animeId, episodes} = req.body;
+        if (!episodes) return res.status(400).json({ message: `Watched episodes cannot be null or empty.` });
         const user = await User.findById(req.userId);
-        const index = user.lists[list].indexOf(anime);
-        user.lists[list][index].episodes_watched = episodes;
+        const index = user.list.findIndex(e => e.anime?.mal_id == animeId);
+        console.log(index);
+        user.list[index].episodes = episodes;
         await user.save();
-        return res.status(202).json({ message: `Amount of watched episodes on ${anime.title || 'anime'} was successfully changed.` });
+        return res.status(202).json({ message: `Amount of watched anime episodes was successfully changed.` });
     } catch (err) {
         console.log(err.message);
         return res.status(500).json({ message: err.message || '500 Server error.' });
