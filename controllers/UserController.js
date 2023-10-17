@@ -96,12 +96,45 @@ export const removefromlist = async (req, res) => {
     try {
         main();
         const { anime, list } = req.body;
-        if (!anime || !list) return res.status(400).json({ message: `` });
+        if (!anime || !list) return res.status(400).json({ message: `No anime or list provided.` });
         const user = await User.findById(req.userId);
         const index = user.lists[list].indexOf(anime);
         user.lists[list].splice(index, 1);
         await user.save();
         return res.status(202).json({ message: `${anime.title || `Anime`} was successfully removed from ${list} list.` });
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).json({ message: err.message || '500 Server error.' });
+    }
+}
+
+export const changerating = async (req, res) => {
+    try {
+        main();
+        const {anime, list, rating} = req.body;
+        if (!anime || !list) return res.status(400).json({ message: `No anime or list provided.` });
+        const user = await User.findById(req.userId);
+        const index = user.lists[list].indexOf(anime);
+        console.log('Index: ' + index);
+        user.lists[list][index].rated = rating;
+        await user.save();
+        return res.status(202).json({ message: `Rating on ${anime.title || 'anime'} was successfully changed.` });
+    } catch (err) {
+        console.log(err.message);
+        return res.status(500).json({ message: err.message || '500 Server error.' });
+    }
+}
+
+export const changeepisodes = async (req, res) => {
+    try {
+        main();
+        const {anime, list, episodes} = req.body;
+        if (!anime || !list) return res.status(400).json({ message: `No anime or list provided.` });
+        const user = await User.findById(req.userId);
+        const index = user.lists[list].indexOf(anime);
+        user.lists[list][index].episodes_watched = episodes;
+        await user.save();
+        return res.status(202).json({ message: `Amount of watched episodes on ${anime.title || 'anime'} was successfully changed.` });
     } catch (err) {
         console.log(err.message);
         return res.status(500).json({ message: err.message || '500 Server error.' });

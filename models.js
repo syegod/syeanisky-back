@@ -1,26 +1,78 @@
 import mongoose from "mongoose";
 
-
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema(
+  {
     username: {
-        type: String,
-        unique: true,
-        require: true
+      type: String,
+      unique: true,
+      require: true,
     },
     passwordHash: {
-        type: String,
-        require: true
+      type: String,
+      require: true,
     },
     avatarUrl: String,
     lists: {
-        viewed: { type: [Object], default: [] },
-        planned: { type: [Object], default: [] },
-        favorite: { type: [Object], default: [] },
-        abandoned: { type: [Object], default: [] },
-        watching: { type: [Object], default: [] },
-    }
-}, {
-    timestamps: true
-});
+      viewed: {
+        type: [
+          {
+            anime: Object,
+            rated: {type: Number, default: null},
+            episodes_watched: {type: Number, default: 0},
+            date: Date,
+          },
+        ],
+        default: [],
+      },
+      planned: {
+        type: [
+          {
+            anime: Object,
+            rated: {type: Number, default: null},
+            episodes_watched: {type: Number, default: 0},
+            date: Date,
+          },
+        ],
+        default: [],
+      },
+      favorite: {
+        type: [
+          {
+            anime: Object,
+            rated: {type: Number, default: null},
+            episodes_watched: {type: Number, default: 0},
+            date: Date,
+          },
+        ],
+        default: [],
+      },
+      abandoned: {
+        type: [
+          {
+            anime: Object,
+            rated: {type: Number, default: null},
+            episodes_watched: {type: Number, default: 0},
+            date: Date,
+          },
+        ],
+        default: [],
+      },
+      watching: {
+        type: [
+          {
+            anime: Object,
+            rated: {type: Number, default: null},
+            episodes_watched: {type: Number, default: 0},
+            date: Date,
+          },
+        ],
+        default: [],
+      },
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export const User = mongoose.model('User', UserSchema);
+export const User = mongoose.model("User", UserSchema);
