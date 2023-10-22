@@ -122,7 +122,6 @@ export const changerating = async (req, res) => {
         if (!rating) return res.status(400).json({ message: `Rating cannot be null or empty.` });
         const user = await User.findById(req.userId);
         const index = user.list.findIndex(e => e.anime?.mal_id == animeId);
-        console.log('Index: ' + index);
         user.list[index].rating = rating;
         await user.save();
         return res.status(202).json({ message: `Rating of anime in your list was successfully changed.` });
@@ -139,7 +138,6 @@ export const changeepisodes = async (req, res) => {
         if (!episodes) return res.status(400).json({ message: `Watched episodes cannot be null or empty.` });
         const user = await User.findById(req.userId);
         const index = user.list.findIndex(e => e.anime?.mal_id == animeId);
-        console.log(index);
         user.list[index].episodes = episodes;
         await user.save();
         return res.status(202).json({ message: `Amount of watched anime episodes was successfully changed.` });
