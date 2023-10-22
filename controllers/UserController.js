@@ -38,10 +38,10 @@ export const login = async (req, res) => {
         const { username, password } = req.body;
 
         const candidate = await User.findOne({ username });
-        if (!candidate) return res.status(400).json({ message: 'User not found.' })
+        if (!candidate) return res.status(400).json({ message: 'Invalid credentials.' })
 
         const passIsValid = await compare(password, candidate.passwordHash);
-        if (!passIsValid) return res.status(400).json({ message: 'Password is invalid.' });
+        if (!passIsValid) return res.status(400).json({ message: 'Invalid credentials.' });
 
         const { passwordHash, ...userData } = candidate._doc;
         const token = await sign({
