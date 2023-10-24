@@ -1,0 +1,11 @@
+{
+    "routes": [
+      { "src": "/api/auth/get-me", "dest": "api/app.js" },
+      { "src": "/api/auth/register", "dest": "api/app.js" },
+      { "src": "/api/auth/login", "dest": "api/app.js" },
+      { "src": "/api/add-to-list", "dest": "api/app.js" },
+      { "src": "/api/remove-from-list", "dest": "api/app.js" },
+      { "src": "/api/change-rating", "dest": "api/app.js" },
+      { "src": "/api/change-episodes", "dest": "api/app.js" }
+    ]
+  }
