@@ -12,63 +12,15 @@ const UserSchema = new mongoose.Schema(
       require: true,
     },
     avatarUrl: String,
-    lists: {
-      viewed: {
-        type: [
-          {
-            anime: Object,
-            rated: {type: Number, default: null},
-            episodes_watched: {type: Number, default: 0},
-            date: Date,
-          },
-        ],
-        default: [],
+    list: [
+      {
+        anime: { type: Object },
+        rating: { type: Number, default: 0 },
+        episodes: { type: Number, default: 0 },
+        date: { type: Date },
+        list: { type: String },
       },
-      planned: {
-        type: [
-          {
-            anime: Object,
-            rated: {type: Number, default: null},
-            episodes_watched: {type: Number, default: 0},
-            date: Date,
-          },
-        ],
-        default: [],
-      },
-      favorite: {
-        type: [
-          {
-            anime: Object,
-            rated: {type: Number, default: null},
-            episodes_watched: {type: Number, default: 0},
-            date: Date,
-          },
-        ],
-        default: [],
-      },
-      abandoned: {
-        type: [
-          {
-            anime: Object,
-            rated: {type: Number, default: null},
-            episodes_watched: {type: Number, default: 0},
-            date: Date,
-          },
-        ],
-        default: [],
-      },
-      watching: {
-        type: [
-          {
-            anime: Object,
-            rated: {type: Number, default: null},
-            episodes_watched: {type: Number, default: 0},
-            date: Date,
-          },
-        ],
-        default: [],
-      },
-    },
+    ],
   },
   {
     timestamps: true,
