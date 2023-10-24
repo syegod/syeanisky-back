@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 
+app.get('/test', (req, res) => res.send('Hello World!'));
 app.get('/auth/get-me', authCheck, UserController.getme);
 
 app.post('/auth/register', UserController.register);
